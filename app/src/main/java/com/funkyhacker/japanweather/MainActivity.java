@@ -8,12 +8,14 @@ import com.funkyhacker.japanweather.model.JapanWeatherResponse;
 import com.funkyhacker.japanweather.network.ApiManager;
 import com.funkyhacker.japanweather.network.JapanWeatherRepository;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class MainActivity extends RxAppCompatActivity {
@@ -35,16 +37,24 @@ public class MainActivity extends RxAppCompatActivity {
     String selectedId = getId(selectedValue);
     //Send Request
     repository.getJapanWeather(selectedId)
-        .enqueue(new Callback<JapanWeatherResponse>() {
-          @Override public void onResponse(Call<JapanWeatherResponse> call,
-              Response<JapanWeatherResponse> response) {
-            JapanWeatherResponse result = response.body();
-            Timber.d(response.toString());
-            binding.resultText.setText(result.getDescription().getText());
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<JapanWeatherResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable d) {
+            Timber.d(d.toString());
           }
 
-          @Override public void onFailure(Call<JapanWeatherResponse> call, Throwable t) {
-            Timber.e(t, t.getMessage());
+          @Override public void onNext(@NonNull JapanWeatherResponse response) {
+            setTitle(response.getTitle());
+            binding.resultText.setText(response.getDescription().getText());
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            Timber.d(e.getMessage());
+          }
+
+          @Override public void onComplete() {
+            Timber.d("onComplete");
           }
         });
 

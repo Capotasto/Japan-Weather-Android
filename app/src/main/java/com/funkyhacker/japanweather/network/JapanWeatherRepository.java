@@ -1,7 +1,7 @@
 package com.funkyhacker.japanweather.network;
 
 import com.funkyhacker.japanweather.model.JapanWeatherResponse;
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.Retrofit;
 
 public class JapanWeatherRepository {
@@ -12,7 +12,7 @@ public class JapanWeatherRepository {
     this.liveDoorWeatherApi = retrofit.create(ApiManager.LiveDoorWeatherApi.class);
   }
 
-  public Call<JapanWeatherResponse> getJapanWeather(String cityNumber) {
+  public Observable<JapanWeatherResponse> getJapanWeather(String cityNumber) {
     return liveDoorWeatherApi.getWeather(cityNumber);
   }
 
