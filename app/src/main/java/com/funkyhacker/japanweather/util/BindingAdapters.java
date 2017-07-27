@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide;
 
 public class BindingAdapters {
 
-  @BindingAdapter("app:imageUri")
+  @BindingAdapter("imageUri")
   public static void setImageUri(ImageView view, String imageUri) {
     Glide.with(view.getContext())
         .load(imageUri)
