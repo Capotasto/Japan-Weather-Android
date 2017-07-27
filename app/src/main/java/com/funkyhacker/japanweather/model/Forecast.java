@@ -1,5 +1,6 @@
 package com.funkyhacker.japanweather.model;
 
+import com.funkyhacker.japanweather.util.DateUtil;
 import java.util.Calendar;
 
 public class Forecast {
@@ -48,4 +49,9 @@ public class Forecast {
   public void setTemperature(Temperature temperature) {
     this.temperature = temperature;
   }
+
+  public String getDateAsString() {
+    return DateUtil.calenderToString(getDate());
+  }
+
 }

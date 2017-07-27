@@ -82,17 +82,18 @@
                 android:layout_marginEnd="16dp"
                 />
 
-            <android.support.v7.app.AlertController.RecycleListView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="316dp"
-                tools:background="#77777777"
                 android:layout_marginLeft="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginRight="16dp"
-                app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginTop="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/result_text"
                 app:layout_constraintHorizontal_bias="0.512"
+                tools:background="#77777777"
                 />
         </android.support.constraint.ConstraintLayout>
 

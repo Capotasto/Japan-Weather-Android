@@ -2,8 +2,10 @@ package com.funkyhacker.japanweather;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import com.funkyhacker.japanweather.databinding.ActivityMainBinding;
+import com.funkyhacker.japanweather.model.Forecast;
 import com.funkyhacker.japanweather.model.JapanWeatherResponse;
 import com.funkyhacker.japanweather.network.ApiManager;
 import com.funkyhacker.japanweather.network.JapanWeatherRepository;
@@ -15,6 +17,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import timber.log.Timber;
 
@@ -24,12 +27,16 @@ public class MainActivity extends RxAppCompatActivity {
 
   private ActivityMainBinding binding;
   private JapanWeatherRepository repository;
+  private ForecastAdapter adapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
     binding.setActivity(this);
     repository = ApiManager.getInstance().getJapanWeatherRepository();
+
+    adapter = new ForecastAdapter(this);
+    binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
   }
 
   public void onClickShowButton(View view) {
@@ -47,6 +54,7 @@ public class MainActivity extends RxAppCompatActivity {
           @Override public void onNext(@NonNull JapanWeatherResponse response) {
             setTitle(response.getTitle());
             binding.resultText.setText(response.getDescription().getText());
+            updateaList(response.getForecasts());
           }
 
           @Override public void onError(@NonNull Throwable e) {
@@ -58,6 +66,11 @@ public class MainActivity extends RxAppCompatActivity {
           }
         });
 
+  }
+
+  private void updateaList(List<Forecast> forecasts) {
+    adapter.setData(forecasts);
+    binding.recyclerView.setAdapter(adapter);
   }
 
   private String getId(String selected){
